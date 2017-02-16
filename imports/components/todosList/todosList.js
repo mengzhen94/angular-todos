@@ -10,9 +10,24 @@ class TodosListCtrl {
 
     this.helpers({
     	tasks(){
-    		return Tasks.find({});
+    		return Tasks.find({},{
+    			sort:{
+    				createdAt: -1
+    			}
+    		});
     	}
     })
+  }
+
+  addTask(newTask) {
+  	// Insert a task into the collection
+  	Tasks.insert({
+  		text: newTask,
+  		createdAt: new Date
+  	});
+
+  	//clear form 
+  	this.newTask = "";
   }
 }
  
