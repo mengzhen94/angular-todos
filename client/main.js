@@ -7,12 +7,12 @@ angular.module('simple-todos', [
 	todosList.name
 ]);
 
-function onReady(){
-	angular.bootstrap(document, ['simple-todos']);
+function onReady() {
+  angular.bootstrap(document, ['simple-todos']);
 }
-
-if(Meteor.isCordova){
-	angular.element(document).on('deviceready', onReady);
-}else{
-	angular.element(document).ready(onReady);
+ 
+if (Meteor.isCordova) {
+  angular.element(document).on('deviceready', onReady);
+} else {
+  angular.element(document).ready(onReady);
 }
