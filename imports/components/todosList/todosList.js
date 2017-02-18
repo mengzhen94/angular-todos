@@ -6,62 +6,68 @@ import { Tasks } from '../../api/tasks.js';
 import template from './todosList.html';
  
 class TodosListCtrl {
-  constructor($scope) {
-    $scope.viewModel(this);
+    constructor($scope) {
+        $scope.viewModel(this);
 
-    this.hideCompleted = false;
+        this.subscribe('tasks');
 
-    this.helpers({
-    	tasks(){
-        const selector = {};
+        this.hideCompleted = false;
 
-        // If hide completed is checked, filter tasks
-        if(this.getReactively('hideCompleted')){
-          selector.checked = {
-            $ne: true
-          };
-        }
+        this.helpers({
+    	    tasks(){
+                const selector = {};
 
-    		return Tasks.find(selector,{
-    			sort:{
-    				createdAt: -1
-    			}
-    		});
-    	},
-      imcompletedCount(){
-        return Tasks.find({
-          checked:{
-            $ne: true
-          }
-        }).count();
-      },
-      currentUser(){
-        return Meteor.user();
-      }
-    })
-  }
+                // If hide completed is checked, filter tasks
+                if(this.getReactively('hideCompleted')){
+                    selector.checked = {
+                        $ne: true
+                    };
+                }
 
-  addTask(newTask) {
-  	// Insert a task into the collection
-  	Meteor.call('tasks.insert', newTask);
+    	       return Tasks.find(selector,{
+    		        sort:{
+    				    createdAt: -1
+    			    }
+    		    });
+    	    },
+            imcompletedCount(){
+                return Tasks.find({
+                    checked:{
+                        $ne: true
+                    }
+                }).count();
+            },
+            currentUser(){
+                return Meteor.user();
+            }
+        })
+    }
 
-  	//clear form 
-  	this.newTask = "";
-  }
+    addTask(newTask) {
+  	    // Insert a task into the collection
+  	    Meteor.call('tasks.insert', newTask);
 
-  setChecked(task){
-    Meteor.call('tasks.setChecked', task._id, !task.checked);
-  }
+  	    //clear form 
+  	    this.newTask = "";
+    }
 
-  removeTask(task){
-  	Meteor.call('tasks.remove', task._id);
-  }
+    setChecked(task){
+        Meteor.call('tasks.setChecked', task._id, !task.checked);
+    }
+
+    removeTask(task){
+  	    Meteor.call('tasks.remove', task._id);
+    }
+
+    setPrivate(task){
+        Meteor.call('tasks.setPrivate', task._id, !task.private);
+    }
 }
  
 export default angular.module('todosList', [
-  angularMeteor
-])
-  .component('todosList', {
-    templateUrl: 'imports/components/todosList/todosList.html',
-    controller: ['$scope', TodosListCtrl]
-  });
+        angularMeteor
+    ])
+    .component('todosList', {
+        templateUrl: 'imports/components/todosList/todosList.html',
+        controller: ['$scope', TodosListCtrl]
+    });
